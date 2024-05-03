@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const contactsPath = path.resolve("contacts", "../db/contacts.json");
+const contactsPath = path.join("contacts", "../db/contacts.json");
 
 async function readFile() {
   const data = await fs.readFile(contactsPath, { encoding: "utf-8" });
@@ -25,6 +25,7 @@ async function getContactById(contactId) {
   if (typeof contact === "undefined") {
     return null;
   }
+
   return contact;
 }
 
@@ -32,7 +33,7 @@ async function removeContact(contactId) {
   const contacts = await readFile();
   const index = contacts.findIndex((contact) => contact.id === contactId);
 
-  if (typeof index === -1) {
+  if (index === -1) {
     return null;
   }
 
@@ -43,7 +44,7 @@ async function removeContact(contactId) {
     ...contacts.slice(index + 1),
   ];
 
-  await writeFile(newContacts);
+  await writeFile(contactsPath, newContacts);
 
   return removedContact;
 }
