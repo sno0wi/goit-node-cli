@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const contactsPath = path.join("contacts", "../db/contacts.json");
+const contactsPath = path.resolve("db", "contacts.json");
 
 async function readFile() {
   const data = await fs.readFile(contactsPath, { encoding: "utf-8" });
@@ -39,10 +39,7 @@ async function removeContact(contactId) {
 
   const removedContact = contacts[index];
 
-  const newContacts = [
-    ...contacts.slice(0, index),
-    ...contacts.slice(index + 1),
-  ];
+  const newContacts = contacts.filter((contact) => contact.id !== contactId);
 
   await writeFile(contactsPath, newContacts);
 
